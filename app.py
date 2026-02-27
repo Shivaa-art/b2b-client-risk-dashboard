@@ -176,3 +176,37 @@ st.write("""
 """)
 
 st.markdown(f"Model Accuracy (Decision Tree): **{round(accuracy*100,2)}%**")
+from sklearn.metrics import confusion_matrix
+import numpy as np
+
+st.markdown("---")
+st.subheader("Model Evaluation")
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, model.predict(X_test))
+
+fig_cm, ax_cm = plt.subplots()
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=["Predicted No", "Predicted Yes"],
+            yticklabels=["Actual No", "Actual Yes"])
+plt.ylabel("Actual")
+plt.xlabel("Predicted")
+st.pyplot(fig_cm)
+
+# Feature Importance
+st.subheader("Feature Importance")
+
+importance = model.feature_importances_
+feature_names = X.columns
+
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": importance
+}).sort_values(by="Importance", ascending=False)
+
+fig_imp, ax_imp = plt.subplots()
+sns.barplot(data=importance_df, x="Importance", y="Feature")
+st.pyplot(fig_imp)
+
+st.markdown("### Key Insight:")
+st.write("The most influential factor affecting churn is:", importance_df.iloc[0]['Feature'])
