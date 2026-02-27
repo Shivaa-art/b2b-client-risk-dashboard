@@ -16,7 +16,7 @@ st.set_page_config(page_title="B2B Risk Dashboard", layout="wide")
 # =============================
 # LOAD DATA (CSV FILE)
 # =============================
-df = pd.read_csv("B2B_Client_Data.csv")  # ⚠ Change if file name differs
+df = pd.read_csv("B2B_Client_Churn_5000.csv") # ⚠ Change if file name differs
 
 # Clean column names
 df.columns = df.columns.str.strip()
