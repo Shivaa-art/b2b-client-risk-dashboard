@@ -1,6 +1,6 @@
 # ==========================================
 # B2B CLIENT RISK & CHURN DASHBOARD
-# IA-3 Final Streamlit App (CSV Version)
+# FINAL CLEAN VERSION (STREAMLIT CLOUD)
 # ==========================================
 
 import streamlit as st
@@ -15,15 +15,15 @@ from sklearn.metrics import accuracy_score
 st.set_page_config(page_title="B2B Risk Dashboard", layout="wide")
 
 # =============================
-# Load Dataset (CSV FILE)
+# LOAD DATASET (EXCEL FILE)
 # =============================
-df = pd.read_csv("B2B_Client_Churn_5000.csv")
+df = pd.read_excel("B2B_Client_Churn_5000.csv.xlsx")
 
-# Convert target variable
-df['Renewal_Status'] = df['Renewal_Status'].map({'Yes':1, 'No':0})
+# Convert Renewal_Status to numeric
+df['Renewal_Status'] = df['Renewal_Status'].map({'Yes': 1, 'No': 0})
 
 # =============================
-# Sidebar Filters
+# SIDEBAR FILTERS
 # =============================
 st.sidebar.header("Filters")
 
@@ -52,19 +52,19 @@ filtered_df = df[
 ]
 
 # =============================
-# Title
+# TITLE
 # =============================
 st.title("B2B Client Risk Intelligence Dashboard")
 
 # =============================
-# KPI Section
+# KPI SECTION
 # =============================
 total_clients = filtered_df.shape[0]
 high_risk_clients = filtered_df[filtered_df['Risk_Category'] == 'High'].shape[0]
 avg_revenue = filtered_df['Monthly_Revenue_USD'].mean()
 predicted_churn_rate = (1 - filtered_df['Renewal_Status'].mean()) * 100
 
-# Train ML model inside app
+# Train ML model
 features = [
     'Monthly_Usage_Score',
     'Payment_Delay_Days',
@@ -89,21 +89,19 @@ col1, col2, col3, col4 = st.columns(4)
 
 col1.metric("Total Clients", total_clients)
 col2.metric("High Risk Clients", high_risk_clients)
-col3.metric("Predicted Churn Rate (%)", round(predicted_churn_rate,2))
-col4.metric("Average Revenue ($)", round(avg_revenue,2))
+col3.metric("Predicted Churn Rate (%)", round(predicted_churn_rate, 2))
+col4.metric("Average Revenue ($)", round(avg_revenue, 2))
 
 st.markdown("---")
 
 # =============================
-# Visualizations
+# VISUALIZATIONS
 # =============================
-
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Risk Category Distribution")
-    risk_counts = filtered_df['Risk_Category'].value_counts()
-    st.bar_chart(risk_counts)
+    st.bar_chart(filtered_df['Risk_Category'].value_counts())
 
 with col2:
     st.subheader("Industry-wise Risk")
@@ -116,14 +114,14 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.subheader("Revenue vs Risk Score")
-    fig, ax = plt.subplots()
+    fig1, ax1 = plt.subplots()
     sns.scatterplot(
         data=filtered_df,
         x='Total Risk Score',
         y='Monthly_Revenue_USD',
         hue='Risk_Category'
     )
-    st.pyplot(fig)
+    st.pyplot(fig1)
 
 with col4:
     st.subheader("Contract Length vs Renewal")
@@ -138,7 +136,7 @@ with col4:
 st.markdown("---")
 
 # =============================
-# Top 20 High Risk Clients
+# TOP 20 HIGH RISK CLIENTS
 # =============================
 st.subheader("Top 20 High-Risk Clients")
 
@@ -151,7 +149,7 @@ st.dataframe(top_high_risk)
 st.markdown("---")
 
 # =============================
-# Retention Strategy Button
+# RETENTION STRATEGY BUTTON
 # =============================
 if st.button("Generate Retention Strategy"):
     st.subheader("Recommended Retention Strategies")
@@ -165,7 +163,7 @@ if st.button("Generate Retention Strategy"):
 st.markdown("---")
 
 # =============================
-# Responsible AI Section
+# RESPONSIBLE AI SECTION
 # =============================
 st.subheader("Ethical Considerations")
 
@@ -176,4 +174,4 @@ st.write("""
 - AI predictions should support, not replace, human decision-making.
 """)
 
-st.markdown(f"Model Accuracy (Decision Tree): **{round(accuracy*100,2)}%**")
+st.markdown(f"Model Accuracy (Decision Tree): **{round(accuracy*100, 2)}%**")
